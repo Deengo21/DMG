@@ -1,12 +1,12 @@
 namespace dmg;
 
-public class WeatherForecast
+public class Character
 {
-    public DateTime Date { get; set; }
 
-    public int TemperatureC { get; set; }
+    public string Name { get; set; }
 
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    public int MeleCombat  { get; set; }
+    public int Shooting {get; set;}
 
-    public string? Summary { get; set; }
+    public int Strength {get; set;}
 }
