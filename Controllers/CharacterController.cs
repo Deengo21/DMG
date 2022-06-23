@@ -39,4 +39,22 @@ public class CharacterController : ControllerBase
 
         throw new Exception("Cahracter not found");
     }
+
+    [HttpPost()]
+    public Character AddCharacter(string name)
+    {
+    //   Characters.Push(new Character());
+    }
+
+    [HttpDelete()]
+    public void DeleteByName(string name)
+    {
+    //   Characters.Delete(new Character());
+    }
+
+    [HttpPatch()]
+    public Character UpdateByName(string name, int strength)
+    {
+    //  for (characters) => chacaters === name => character.strength = strength
+    }
 }
