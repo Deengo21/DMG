@@ -1,4 +1,6 @@
 using System.Net;
+using dmg.Data;
+using dmg.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dmg.Controllers;
@@ -7,30 +9,26 @@ namespace dmg.Controllers;
 [Route("characters")]
 public class CharacterController : ControllerBase
 {
-    private List<Character> characters = new()
-    {
-        new Character { Name = "Thomas", MeleCombat = 50, Shooting = 50, Strength = 20 },
-        new Character { Name = "Gor", MeleCombat = 20, Shooting = 50, Strength = 20 },
-        new Character { Name = "Arnold", MeleCombat = 30, Shooting = 50, Strength = 20 },
-    };
-
     private readonly ILogger<CharacterController> _logger;
 
-    public CharacterController(ILogger<CharacterController> logger)
+    private readonly IRepository<Character> _characterRepository;
+
+    public CharacterController(ILogger<CharacterController> logger, IRepository<Character> characterRepository)
     {
         _logger = logger;
+        _characterRepository = characterRepository;
     }
 
     [HttpGet()]
-    public List<Character> GetAll()
+    public async Task<List<Character>> GetAll()
     {
-        return characters;
+        return await this._characterRepository.GetAll();
     }
 
-    [HttpGet("{name}")]
-    public Character GetCharacterByName(string name)
+    [HttpGet("{id}")]
+    public async Task<Character> GetCharacterByName(int id)
     {
-        var character = characters.Find((character) => character.Name == name);
+        var character = await this._characterRepository.Get(id);
 
         if (character == null)
         {
@@ -41,32 +39,20 @@ public class CharacterController : ControllerBase
     }
 
     [HttpPost()]
-    public List<Character> AddCharacter(Character character)
+    public async Task<Character> AddCharacter(Character character)
     {
-        return characters.Append(character).ToList();
+        return await this._characterRepository.Add(character);
     }
 
-    [HttpDelete("{name}")]
-    public List<Character> DeleteByName(string name)
+    [HttpDelete("{id}")]
+    public async Task<Character> DeleteByName(int id)
     {
-        var character = characters.Find((character) => character.Name == name);
-        if (character == null)
-        {
-            throw new HttpRequestException("Character not found", null, HttpStatusCode.NotFound);
-        }
-
-        characters.Remove(character);
-        
-        return characters;
+        return await this._characterRepository.Delete(id);
     }
 
-    [HttpPatch("{name}")]
-    public List<Character> UpdateByName(string name, Character character)
+    [HttpPatch("{id}")]
+    public async Task<Character> UpdateByName(Character character)
     {
-        var foundCharacterIndex = characters.FindIndex(c => c.Name == name);
-
-        characters[foundCharacterIndex] = character;
-
-        return characters;
+        return await this._characterRepository.Update(character);
     }
 }
