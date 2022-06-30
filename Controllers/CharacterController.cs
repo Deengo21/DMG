@@ -44,6 +44,8 @@ public class CharacterController : ControllerBase
     public Character AddCharacter(string name)
     {
     //   Characters.Push(new Character());
+    // Dodawanie postaci
+
     }
 
     [HttpDelete()]
