@@ -6,56 +6,56 @@ using Microsoft.AspNetCore.Mvc;
 namespace dmg.Controllers;
 
 [ApiController]
-[Route("characters")]
-public class CharacterController : ControllerBase
+[Route("weapons")]
+public class WeaponController : ControllerBase
 {
-    private readonly ILogger<CharacterController> _logger;
+    private readonly ILogger<WeaponController> _logger;
 
-    private readonly IRepository<Character> _characterRepository;
+    private readonly IRepository<Weapon> _weaponRepository;
 
-    public CharacterController(ILogger<CharacterController> logger, IRepository<Character> characterRepository)
+    public WeaponController(ILogger<WeaponController> logger, IRepository<Weapon> weaponRepository)
     {
         _logger = logger;
-        _characterRepository = characterRepository;
+        _weaponRepository = weaponRepository;
     }
 
     [HttpGet()]
-    public async Task<List<Character>> GetAll()
+    public async Task<List<Weapon>> GetAll()
     {
-        return await this._characterRepository.GetAll();
+        return await this._weaponRepository.GetAll();
     }
 
     [HttpGet("{id}")]
-    public async Task<Character> GetCharacterByName(int id)
+    public async Task<Weapon> GetWeaponByName(int id)
     {
-        var character = await this._characterRepository.Get(id);
+        var weapon = await this._weaponRepository.Get(id);
 
-        if (character == null)
+        if (weapon == null)
         {
-            throw new HttpRequestException("Character not found", null, HttpStatusCode.NotFound);
+            throw new HttpRequestException("Weapon not found", null, HttpStatusCode.NotFound);
         }
 
-        return character;
+        return weapon;
     }
 
     [HttpPost()]
-    public async Task<Character> AddCharacter(Character character)
+    public async Task<Weapon> AddWeapon(Weapon weapon)
     {
-    //   Characters.Push(new Character());
+    //   Weapons.Push(new Weapon());
     // Dodawanie postaci
 
-        return await this._characterRepository.Add(character);
+        return await this._weaponRepository.Add(weapon);
     }
 
     [HttpDelete("{id}")]
-    public async Task<Character> DeleteByName(int id)
+    public async Task<Weapon> DeleteByName(int id)
     {
-        return await this._characterRepository.Delete(id);
+        return await this._weaponRepository.Delete(id);
     }
 
     [HttpPatch("{id}")]
-    public async Task<Character> UpdateByName(Character character)
+    public async Task<Weapon> UpdateByName(Weapon weapon)
     {
-        return await this._characterRepository.Update(character);
+        return await this._weaponRepository.Update(weapon);
     }
 }

@@ -9,6 +9,7 @@ public class DatabaseContext : DbContext
     }
 
     public DbSet<Character> Character { get; set; }
+    public DbSet<Weapon> Weapons {get; set;}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,4 +25,5 @@ public class DatabaseContext : DbContext
         });
         base.OnModelCreating(modelBuilder);
     }
+
 }

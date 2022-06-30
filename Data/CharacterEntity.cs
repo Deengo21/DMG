@@ -11,4 +11,6 @@ public class Character : IEntity
     public int Shooting { get; set; }
 
     public int Strength { get; set; }
+
+    public int WeaponId {get; set; }
 }

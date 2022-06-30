@@ -4,14 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = "server=localhost;user=root;password=password;database=dmg";
+var connectionString = "server=localhost;user=root;password=1234;database=BazaPierwsza";
 
-// Replace with your server version and type.
-// Use 'MariaDbServerVersion' for MariaDB.
-// Alternatively, use 'ServerVersion.AutoDetect(connectionString)'.
-// For common usages, see pull request #1233.
-
-// Replace 'YourDbContext' with the name of your own DbContext derived class.
 builder.Services.AddDbContext<DatabaseContext>(
     dbContextOptions => dbContextOptions
         .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
@@ -21,6 +15,7 @@ builder.Services.AddDbContext<DatabaseContext>(
 
 builder.Services.AddScoped<DbContext, DatabaseContext>();
 builder.Services.AddScoped<IRepository<Character>, CharacterRepository>();
+builder.Services.AddScoped<IRepository<Weapon>, WeaponRepository>();
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -43,3 +38,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
