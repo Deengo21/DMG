@@ -40,7 +40,7 @@ public class CharacterRepository : IRepository<Character>
 
     public async Task<List<Character>> GetAll()
     {
-        return await context.Set<Character>().ToListAsync();
+        return await context.Set<Character>().Join(context.Set<Weapon>, character => character.WeaponId, weapon => weapon.Id).ToListAsync();
     }
 
     public async Task<Character> Update(Character entity)
