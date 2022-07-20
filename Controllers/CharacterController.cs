@@ -1,62 +1,61 @@
+using System.Net;
+using dmg.Data;
+using dmg.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace dmg.Controllers;
 
-
-
 [ApiController]
-[Route("characters")]
-public class CharacterController : ControllerBase
+[Route("weapons")]
+public class WeaponController : ControllerBase
 {
+    private readonly ILogger<WeaponController> _logger;
 
-    private List<Character> characters = new List<Character> {
-         new Character{ Name = "Thomas", MeleCombat = 50, Shooting = 50,Strength= 20},
-         new Character{ Name = "Gor", MeleCombat = 20, Shooting = 50,Strength= 20},
-         new Character{ Name = "Arnold", MeleCombat = 30, Shooting = 50,Strength= 20},
-    };
+    private readonly IRepository<Weapon> _weaponRepository;
 
-    private readonly ILogger<CharacterController> _logger;
-
-    public CharacterController(ILogger<CharacterController> logger)
+    public WeaponController(ILogger<WeaponController> logger, IRepository<Weapon> weaponRepository)
     {
         _logger = logger;
+        _weaponRepository = weaponRepository;
     }
 
-    [HttpGet( )]
-    public List<Character> Get()
+    [HttpGet()]
+    public async Task<List<Weapon>> GetAll()
     {
-    return characters;
-
+        return await this._weaponRepository.GetAll();
     }
 
-    [HttpGet("{name}")]
-    public Character GetCharacterByName(string name)
+    [HttpGet("{id}")]
+    public async Task<Weapon> GetWeaponByName(int id)
     {
-        Character? character = characters.Find((character) => character.Name == name);
-        if(character != null) {
-            return character;
+        var weapon = await this._weaponRepository.Get(id);
+
+        if (weapon == null)
+        {
+            throw new HttpRequestException("Weapon not found", null, HttpStatusCode.NotFound);
         }
 
-        throw new Exception("Cahracter not found");
+        return weapon;
     }
 
     [HttpPost()]
-    public Character AddCharacter(string name)
+    public async Task<Weapon> AddWeapon(Weapon weapon)
     {
-    //   Characters.Push(new Character());
+    //   Weapons.Push(new Weapon());
     // Dodawanie postaci
 
+        return await this._weaponRepository.Add(weapon);
     }
 
-    [HttpDelete()]
-    public void DeleteByName(string name)
+    [HttpDelete("{id}")]
+    public async Task<Weapon> DeleteByName(int id)
     {
-    //   Characters.Delete(new Character());
+        return await this._weaponRepository.Delete(id);
     }
 
-    [HttpPatch()]
-    public Character UpdateByName(string name, int strength)
+    [HttpPatch("{id}")]
+    public async Task<Weapon> UpdateByName(Weapon weapon)
     {
-    //  for (characters) => chacaters === name => character.strength = strength
+        return await this._weaponRepository.Update(weapon);
     }
 }
