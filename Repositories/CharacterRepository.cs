@@ -1,5 +1,8 @@
 using dmg.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace dmg.Repositories;
 
@@ -21,7 +24,8 @@ public class CharacterRepository : IRepository<Character>
 
     public async Task<Character> Delete(int id)
     {
-        var entity = await context.Set<Character>().FindAsync(id);
+        var entity = await context.Set<Character>();
+     
         if (entity == null)
         {
             return entity;
@@ -40,7 +44,29 @@ public class CharacterRepository : IRepository<Character>
 
     public async Task<List<Character>> GetAll()
     {
-        return await context.Set<Character>().Join(context.Set<Weapon>, character => character.WeaponId, weapon => weapon.Id).ToListAsync();
+        List<Character> characters =  await context.Set<Character>().ToListAsync();
+        List<int> weaponIds = new List<int>();
+        for (int i = 0; i < characters.Count; i++)
+        {
+            Character character = characters[i];
+            
+            weaponIds.Add(character.WeaponId);
+        }
+        // Liste broni
+        List<Weapon> weapons = new List<Weapon>();
+        // Petla do pobierania broni
+        for (int i = 0; i < weaponIds.Count; i++)
+        {
+           Weapon weapon = await context.Set<Weapon>().FindAsync(weaponIds[i]);
+
+            weapons.Add(weapon);
+
+        }
+
+        return characters;
+
+
+
     }
 
     public async Task<Character> Update(Character entity)
@@ -48,5 +74,7 @@ public class CharacterRepository : IRepository<Character>
         context.Entry(entity).State = EntityState.Modified;
         await context.SaveChangesAsync();
         return entity;
+        
     }
+    
 }
